@@ -5,13 +5,13 @@
 // Learn life-cycle callbacks:
 //  - https://docs.cocos.com/creator/manual/en/scripting/life-cycle-callbacks.html
 
-const {ccclass, property} = cc._decorator;
+const { ccclass, property } = cc._decorator;
 
 @ccclass
 export default class NewClass extends cc.Component {
 
-    @property(cc.Label)
-    loadtext: cc.Label = null;
+    @property(cc.Node)
+    loadtext: cc.Node = null;
 
     @property
     text: string = 'hello';
@@ -23,36 +23,38 @@ export default class NewClass extends cc.Component {
     addTimeNum: number = 0
     // LIFE-CYCLE CALLBACKS:
 
-    onLoad () {
-        
+    onLoad() {
+
     }
 
-    updateLoadBar (){
+    updateLoadBar() {
         let BarProgres: number = this.loadBar.progress
-        cc.log("==========updateLoadBar=========BarProgres:"+BarProgres)
+        let loadtextstr = this.loadtext.getComponent(cc.Label)
+        cc.log("==========updateLoadBar=========BarProgres:" + BarProgres)
 
-        if(BarProgres <= 0.9){
+        if (BarProgres <= 0.9) {
             BarProgres += 0.1
-            this.loadtext.string = "资源加载中 " + Math.ceil(BarProgres * 100) + "% ..."
+            loadtextstr.string = "资源加载中 " + Math.ceil(BarProgres * 100) + "% ..."
             this.loadBar.progress = BarProgres
             cc.log("==========2=========")
         }
-        else{
+        else {
             cc.log("==========3========")
-            this.loadtext.string = "资源加载中 " + 100 + "% ..."
+            loadtextstr.string = "资源加载中 " + 100 + "% ..."
             this.unschedule(this.updateLoadBar)
         }
-      
+
     }
 
-    start () {
+    start() {
+        let loadtextstr = this.loadtext.getComponent(cc.Label)
         this.loadBar.progress = 0
-        this.loadtext.string = "资源加载中 0% ..."
+        loadtextstr.string = "资源加载中 0% ..."
         cc.log("==========1=========")
         this.schedule(this.updateLoadBar, 0.5)
     }
 
-    update (dt:number) {
+    update(dt: number) {
         this.addTimeNum += dt;
     }
 }
